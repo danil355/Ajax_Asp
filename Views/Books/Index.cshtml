@@ -1,0 +1,67 @@
+﻿@using AjaxProject.Models
+@model IEnumerable<AjaxProject.Models.Book>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Books</h2>
+
+
+<div id="createPage">
+    <form id="createForm">
+        <input id="title" type="text" name="Title" value="" />
+        <input id="author" type="text" name="Author" value="" />
+        <input id="createBtn" type="button" name="Create" value="Create" />
+    </form>
+</div>
+
+<div id="dataTable">
+    Books list
+</div>
+
+
+@section scripts
+{
+
+    <script>
+        function showAllBooks() {
+            $.ajax({
+                type: "GET",
+                url: "/Books/GetAllBooks",
+                success: function(res) {
+                    $("#dataTable").html(res);
+                }
+            });
+        }
+
+        showAllBooks();
+
+
+
+        $("#createBtn").click(function (e) {
+            e.preventDefault();
+
+            var title = $("#title").val();
+            var author = $("#author").val();
+
+            var data = new Object();
+            data.Title = title;
+            data.Author = author;
+            
+            $.ajax({
+                type: "POST",
+                url: "/Books/CreateBook",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (result) {
+                    showAllBooks();
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+
+        });
+    </script>
+}
